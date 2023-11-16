@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgresql:
+    image: postgres:latest
+    container_name: postgresql_container
+    environment:
+      POSTGRES_DB: "posgresql"
+      POSTGRES_USER:  "posgresql"
+      POSTGRES_PASSWORD:  "posgresql"
+    ports:
+      - "5432:5432"
+    networks:
+      - postgresql_network
+
+networks:
+  postgresql_network:
+    driver: bridge

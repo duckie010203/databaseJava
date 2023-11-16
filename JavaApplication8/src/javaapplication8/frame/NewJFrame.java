@@ -2,10 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package javaapplication8;
+package javaapplication8.frame;
 
+import javaapplication8.dao.StudentDAO;
+import javaapplication8.entity.Student;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
-import javax.swing.JTable;
+import java.util.List;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -17,20 +22,17 @@ public class NewJFrame extends javax.swing.JFrame {
     /**
      * Creates new form NewJFrame
      */
-    
-    private ArrayList<SinhVien> a;
-    
-    public NewJFrame() {
+
+    StudentDAO studentDAO = null;
+    public NewJFrame() throws Exception {
         initComponents();
-        a = new ArrayList<>();
+        studentDAO = new StudentDAO();
         dtb = new DefaultTableModel();
         dtb.addColumn("ID");
         dtb.addColumn("Name");
         dtb.addColumn("Class");
         dtb.addColumn("GPA");
-        for(SinhVien i:a){
-            dtb.addRow((Object[]) i.toObject());
-        }
+
         jTable1 = new JTable(dtb);
     }
 
@@ -65,19 +67,19 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jLabel2.setText("MSV");
 
-        jTextField1.setText("jTextField1");
+        jTextField1.setText("");
 
         jLabel3.setText("Tên");
 
-        jTextField2.setText("jTextField2");
+        jTextField2.setText("");
 
         jLabel4.setText("Lớp");
 
-        jTextField3.setText("jTextField3");
+        jTextField3.setText("");
 
-        jLabel5.setText("jLabel5");
+        jLabel5.setText("GPA");
 
-        jTextField4.setText("jTextField4");
+        jTextField4.setText("");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -136,14 +138,22 @@ public class NewJFrame extends javax.swing.JFrame {
         jButton1.setText("Hiển Thị");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                try {
+                    jButton1ActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
         jButton2.setText("Thêm");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                try {
+                    jButton2ActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -157,7 +167,11 @@ public class NewJFrame extends javax.swing.JFrame {
         jButton4.setText("Xoá");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                try {
+                    jButton4ActionPerformed(evt);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -220,48 +234,59 @@ public class NewJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+    private void load() throws Exception {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.getDataVector().removeAllElements();
+        List<Student> studentList = studentDAO.getAll();
+        studentList.stream().forEach(student -> {
+            model.addRow(new Object[]{
+                    student.getId(),
+                    student.getName(),
+                    student.getClasss(),
+                    student.getGpa()
+            });
+        });
+    }
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_jButton1ActionPerformed
+        load();
         jScrollPane1.setViewportView(jTable1);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        Object[] newData = {"2", "Jane Smith", "30","4.0"};
-        dtb.addRow(newData);
+        if (jTextField1.getText().isEmpty() || jTextField2.getText().isEmpty() || jTextField3.getText().isEmpty() || jTextField4.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin");
+            return;
+        }
+        Student student = studentDAO.GetByID(jTextField1.getText().toUpperCase().trim());
+        if (student != null) {
+            JOptionPane.showMessageDialog(null, "Mã sinh viên đã tồn tại");
+            return;
+        }
+        studentDAO.Add(new Student(
+                jTextField1.getText().toUpperCase().trim() ,
+                jTextField2.getText().trim(),
+                jTextField3.getText().trim(),
+                Float.parseFloat(jTextField4.getText())
+        ));
+        load();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        for(int i = 0; i < a.size(); i++){
-            if(a.get(i).getId().equals(jTextField1.getText())){
-                a.get(i).setId(jTextField1.getText());
-                a.get(i).setName(jTextField1.getText());
-                a.get(i).setClasss(jTextField1.getText());
-                a.get(i).setGpa(Float.parseFloat(jTextField1.getText()));
-                for(int j = 0; j < 4; j++){
-                    dtb.setValueAt(jTextField1.getText(), i, j);
-                }
-            }
-        }
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        int row = 1;
-        dtb.removeRow(row);
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_jButton4ActionPerformed
+        DefaultTableModel source = (DefaultTableModel) jTable1.getModel();
+        int row = jTable1.getSelectedRow();
+        String id = (String) source.getValueAt(row, 0);
+        studentDAO.Delete(id);
+        load();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-        dtb = new DefaultTableModel();
-        dtb.addColumn("ID");
-        dtb.addColumn("Name");
-        dtb.addColumn("Class");
-        dtb.addColumn("GPA");
-        for(SinhVien i:a){
-            dtb.addRow((Object[]) i.toObject());
-        }
-        jTable1 = new JTable(dtb);
+        studentDAO.DeleteAll();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
@@ -294,7 +319,11 @@ public class NewJFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NewJFrame().setVisible(true);
+                try {
+                    new NewJFrame().setVisible(true);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }

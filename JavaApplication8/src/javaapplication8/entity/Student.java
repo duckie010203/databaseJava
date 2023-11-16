@@ -2,15 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package javaapplication8;
+package javaapplication8.entity;
 
-public class SinhVien implements Comparable<SinhVien>{
-    private String name, classs, id;
+public class Student implements Comparable<Student>{
+    private String id, name, classId;
     private float gpa;
 
-    public SinhVien(String name, String classs, String id, float gpa) {
+    public Student(String id, String name, String classId, float gpa) {
         this.name = name;
-        this.classs = classs;
+        this.classId = classId;
         this.id = id;
         this.gpa = gpa;
     }
@@ -20,7 +20,7 @@ public class SinhVien implements Comparable<SinhVien>{
     }
 
     public String getClasss() {
-        return classs;
+        return classId;
     }
 
     public String getId() {
@@ -36,7 +36,7 @@ public class SinhVien implements Comparable<SinhVien>{
     }
 
     public void setClasss(String classs) {
-        this.classs = classs;
+        this.classId = classs;
     }
 
     public void setId(String id) {
@@ -49,12 +49,12 @@ public class SinhVien implements Comparable<SinhVien>{
     
     public Object[] toObject(){
         return new Object[]{
-            id,name,classs,String.format("%.2f", gpa)
+            id,name,classId,String.format("%.2f", gpa)
         };
     }
     
     @Override
-    public int compareTo(SinhVien o){
+    public int compareTo(Student o){
         return (int) o.gpa - (int)gpa;
     }
     
