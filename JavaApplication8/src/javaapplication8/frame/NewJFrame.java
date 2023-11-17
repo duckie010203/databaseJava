@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package javaapplication8.frame;
 
 import javaapplication8.dao.StudentDAO;
@@ -292,6 +289,7 @@ public class NewJFrame extends javax.swing.JFrame {
             dtb.setValueAt(name, jTable1.getSelectedRow(), 1);
             dtb.setValueAt(classs, jTable1.getSelectedRow(), 2);
             dtb.setValueAt(gpa, jTable1.getSelectedRow(), 3);
+            studentDAO.Update(id, new Student(id, name, classs, Float.parseFloat(gpa)));
             JOptionPane.showMessageDialog(this, "Update succesfull");
         }
         else {
