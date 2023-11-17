@@ -10,6 +10,8 @@ import javaapplication8.entity.Student;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -67,19 +69,19 @@ public class NewJFrame extends javax.swing.JFrame {
 
         jLabel2.setText("MSV");
 
-        jTextField1.setText("");
+        jTextField1.setText("jTextField1");
 
         jLabel3.setText("Tên");
 
-        jTextField2.setText("");
+        jTextField2.setText("jTextField2");
 
         jLabel4.setText("Lớp");
 
-        jTextField3.setText("");
+        jTextField3.setText("jTextField3");
 
-        jLabel5.setText("GPA");
+        jLabel5.setText("jLabel5");
 
-        jTextField4.setText("");
+        jTextField4.setText("jTextField4");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -133,26 +135,33 @@ public class NewJFrame extends javax.swing.JFrame {
                 "MSV", "Tên", "Lớp", "Title 4"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Hiển Thị");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
+                try{
                     jButton1ActionPerformed(evt);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+                }
+                catch (Exception e){
+
                 }
             }
         });
 
         jButton2.setText("Thêm");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButton2.addActionListener(new java.awt.event.ActionListener()  {
+            public void actionPerformed(java.awt.event.ActionEvent evt)  {
                 try {
                     jButton2ActionPerformed(evt);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+                }
+                catch (Exception e){
+
                 }
             }
         });
@@ -169,8 +178,9 @@ public class NewJFrame extends javax.swing.JFrame {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
                     jButton4ActionPerformed(evt);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+                }
+                catch (Exception e){
+
                 }
             }
         });
@@ -272,9 +282,26 @@ public class NewJFrame extends javax.swing.JFrame {
         load();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    
+    
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-
+        DefaultTableModel dtb = (DefaultTableModel) jTable1.getModel();
+        if(jTable1.getSelectedRow() == 1){
+            String id  = jTextField1.getText(),name = jTextField2.getText(), classs = jTextField3.getText(), gpa = jTextField4.getText();
+            dtb.setValueAt(id, jTable1.getSelectedRow(), 0);
+            dtb.setValueAt(name, jTable1.getSelectedRow(), 1);
+            dtb.setValueAt(classs, jTable1.getSelectedRow(), 2);
+            dtb.setValueAt(gpa, jTable1.getSelectedRow(), 3);
+            JOptionPane.showMessageDialog(this, "Update succesfull");
+        }
+        else {
+            if(jTable1.getRowCount() == 0){
+                JOptionPane.showMessageDialog(this, "Table is empty");
+            }
+            else{
+                JOptionPane.showMessageDialog(this, "Please select one row to update");                
+            }
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) throws Exception {//GEN-FIRST:event_jButton4ActionPerformed
@@ -289,10 +316,24 @@ public class NewJFrame extends javax.swing.JFrame {
         studentDAO.DeleteAll();
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel dtb = (DefaultTableModel) jTable1.getModel();
+        String id = dtb.getValueAt( jTable1.getSelectedRow(), 0).toString();
+        String name = dtb.getValueAt( jTable1.getSelectedRow(), 1).toString();
+        String classs = dtb.getValueAt( jTable1.getSelectedRow(), 2).toString();
+        String gpa = dtb.getValueAt( jTable1.getSelectedRow(), 3).toString();
+        jTextField1.setText(id);
+        jTextField2.setText(name);
+        jTextField3.setText(classs);
+        jTextField4.setText(gpa);
+
+    }//GEN-LAST:event_jTable1MouseClicked
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws Exception{
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
